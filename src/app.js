@@ -1,5 +1,13 @@
-const express = require('express');
+const database = require("./config");
+
+const express = require("express");
 
 const app = express();
+const configureExpress = () => {
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
-module.exports = app;
+  return app;
+};
+
+module.exports = database.authenticate().then(configureExpress);
