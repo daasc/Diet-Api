@@ -8,6 +8,7 @@ const connection = {
   uri: config.url_connections,
   options: {
     useNewUrlParser: true,
+    useUnifiedTopology: true
   },
 }
 

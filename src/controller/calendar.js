@@ -1,21 +1,24 @@
+const modelCalendar = require("../models/calendar");
 class CalendarController {
   constructor() {
+    this.db =  modelCalendar;
   }
 
   async store(Dao) {
     try {
-      // await this.db.insertOne(Dao);
+      const calendar = new modelCalendar(Dao);
+      await calendar.save()
     } catch (error) {
-      throw error;
+      throw Error(error);
     }
   }
 
   async get() {
     try {
-      // const result = await this.db.find({}).toArray();
+      const result = await this.db.find({});
       return result;
     } catch (error) {
-      throw error;
+      throw Error(error);
     }
   }
 }
