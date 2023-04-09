@@ -26,7 +26,8 @@ class CalendarController {
   async store(meal) {
     try {
       let calendar = await this.findOne();
-      let week = calendar?.week;
+      let week = calendar?.week ? JSON.parse(JSON.stringify(calendar.week)) : false;
+
       if (!week) {
         week = this.defaultCalender();
       }
@@ -35,13 +36,16 @@ class CalendarController {
       } else {
         week[meal.meal][parseInt(meal.day)].push(meal);
       }
-      console.log(week[meal.meal][parseInt(meal.day)]);
-      console.log(week[meal.meal]);
-      await this.db.updateOne(
-        { _id: calendar._id },
-        { week: week },
-        { new: true }
-      );
+      if (!calendar?.week) {
+        const calendar = new modelCalendar({ week });
+        return calendar.save();
+      }
+      if (!!calendar?.week) {
+        return this.db.updateOne(
+          { _id: calendar._id },
+          { $set: { week: week } }
+        )
+      }
     } catch (error) {
       console.log(error);
       throw Error(error);
@@ -61,15 +65,22 @@ class CalendarController {
   async findOne() {
     try {
       const curr = new Date();
-      const firstDay = new Date(curr.setDate(curr.getDate() - curr.getDay()));
+      let firstDay = new Date(curr.setDate(curr.getDate() - curr.getDay()));
       const lastDay = new Date(
         curr.setDate(curr.getDate() - curr.getDay() + 6)
       );
-      console.log(firstDay, lastDay);
+      
+      const nextDay = lastDay;
+      if (curr.getDay() === 6) {
+        firstDay = new Date(curr.setDate(curr.getDate() - 12))
+      } 
+      nextDay.setDate(lastDay.getDate() + 1);
+      
       const week = await this.db.findOne({
-        createdAt: { $gte: firstDay, $lte: lastDay },
+        createdAt: { $gte: firstDay, $lte: nextDay },
       });
-      return JSON.stringify(week);
+
+      return week;
     } catch (error) {}
   }
 }
