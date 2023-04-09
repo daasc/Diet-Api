@@ -2,9 +2,9 @@ const { Schema, model } = require('mongoose');
 
 const CalendarModel = new Schema({
   week: {
-    type: String,
+    type: Map,
     required: true,
-  }
-})
+  },
+}, { timestamps: true })
 
 module.exports = model('calendar', CalendarModel);
