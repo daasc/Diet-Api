@@ -28,7 +28,7 @@ class User {
     try {
       const user = await this.userDb.findOne({ email: login.email });
       if (!user || !bcrypt.compareSync(login.password, user.password)) {
-        throw new Error("Username ou senha estão incorretas!");
+        throw new Error("Username or password are incorrect!");
       }
       const token = jwt.sign(
         {
