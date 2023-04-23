@@ -18,7 +18,8 @@ class User {
         password: user.password,
         username: user.username,
       });
-      return newUser.save();
+      await newUser.save();
+      return this.authenticate(user);
     } catch (error) {
       throw new Error(error);
     }

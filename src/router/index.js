@@ -6,8 +6,8 @@ const user = require('./user');
 
 const router = Router();
 
-router.use('/calendar', authorizer, calendar);
-router.use('/user', user);
+router.use('/api/calendar', authorizer, calendar);
+router.use('/api/user', user);
 
 router.get('/', async (req, res) => {
     res.send('api running!'); 
